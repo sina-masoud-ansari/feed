@@ -24,12 +24,13 @@ typedef struct
 	int outputLength;
 } dataSample;
 
-void printData (data* dp); // untested
+void printData(data* dp); // untested
 void printDataRange (data* dp, int start, int end); // untested
 
-data* readData (char* fname); // test_read
-dataSample* getRandomSamples(data* dp, int numSamples, int sampleInputLength, int sampleOutputLength); // TODO
-int check_data(data* dp, int print_summary); // test_data
+data* readData(char* fname); // test_read
+dataSample* getRandomSamples(data* dp, int numSamples, int sampleInputLength, int sampleOutputLength); //test_samples
+int check_data(data* dp, int print_summary); // test_dataset
 int check_ohlc(ohlc* row); // test_ohlc
+void print_reason(ohlc* row); // untested
 
 #endif

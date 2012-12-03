@@ -20,4 +20,4 @@ test: tests
 	./tests
 
 clean:
-	rm neuro tests *.o
+	rm neuro tests *.o core

@@ -151,14 +151,14 @@ int check_data(data* dp, int print_summary)
 {
 	int i, f;
 	double o, h, l, c;
-	int num_failed;
+	int num_failed = 0;
 	int* failed;
-	ohlc* rows = data->rows;
+	ohlc* rows = dp->rows;
 
 	// count the number of failures
 	for (i = 0; i < dp->length; i++)
 	{
-		num_failed += check_ohlc(&rows[i]); // returns 1 on failure
+		num_failed += check_ohlc(&rows[i]); // returns 1 on failure		
 	}
 
 	// record the failures
@@ -166,7 +166,7 @@ int check_data(data* dp, int print_summary)
 	failed = (int*) malloc(sizeof(int) * num_failed);	
 	for (i = 0; i < dp->length; i++)
 	{
-		if (!check_ohlc(&rows[i]))
+		if (check_ohlc(&rows[i]))
 		{
 			failed[f] = i;
 			f++;
@@ -176,7 +176,7 @@ int check_data(data* dp, int print_summary)
 	// print summary
 	if (print_summary == 1)
 	{
-		printf("Data checkd: %d failures\n", num_failed);
+		printf("Data checked: %d failures\n", num_failed);
 		for (i = 0; i < num_failed; i++)
 		{
 			f = failed[i];
@@ -184,7 +184,8 @@ int check_data(data* dp, int print_summary)
 			h = rows[f].high;
 			l = rows[f].low;
 			c = rows[f].close;
-			printf("Row: %d\tO:%.2f H:%.2f L:%.2f C:%.2f\n", f, o, h, l, c);
+			printf("Row: %d\tO: %.2f H: %.2f L: %.2f C: %.2f Reason: ", f, o, h, l, c);
+			print_reason(&rows[f]);
 		}	
 	}
 	
@@ -198,21 +199,15 @@ int check_ohlc(ohlc* row)
 	double h = row->high;
 	double l = row->low;
 	double c = row->close;
-	
+
 	// check open
 	if (o < l || o > h)
 	{
 		return 1;
 	}	
 
-	// check high
+	// check high and low
 	if (h < l)
-	{
-		return 1;
-	}	
-
-	// check low
-	if (l > h)
 	{
 		return 1;
 	}	
@@ -224,4 +219,39 @@ int check_ohlc(ohlc* row)
 	}
 	
 	return 0;
+}
+
+void print_reason(ohlc* row)
+{
+	double o = row->open;
+	double h = row->high;
+	double l = row->low;
+	double c = row->close;
+	
+	// check open
+	if (o < l) {
+		puts("Open < Low ");
+		
+	}
+	if (o > h)
+	{
+		puts("Open > High ");
+	}	
+
+	// check high and low
+	if (h < l)
+	{
+		puts("High < Low ");
+	}	
+	
+	// check close
+	if (c < l)
+	{
+		puts("Close < Low ");
+	}
+ 	if (c > h)
+	{
+		puts("Close > High ");
+	}
+	puts("\n");
 }

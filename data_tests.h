@@ -2,6 +2,6 @@
 #define DATA_TESTS_H
 
 Suite* test_data(void);
-int run_data_tests(void);
+void run_data_tests(int* num_failed);
 
 #endif
