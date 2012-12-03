@@ -1,16 +1,23 @@
 CC=gcc
 CFLAGS=-Wall -g
+LIBS=-lcheck
 
-all: main.c data.c
-	clear
-	$(CC) $(CFLAGS) main.c data.c nn.c -o neuro
+NEURO_OBJS=data.o nn.o
+TEST_OBJS=tests.o data_tests.o
 
-test: tests.c
-	clear
-	$(CC) $(CFLAGS) tests.c -o tests -lcheck
-	./tests 
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+all: neuro tests
+
+neuro: main.o $(NEURO_OBJS)
+	$(CC) $(CFLAGS) -o $@ main.o $(NEURO_OBJS) $(LIBS)
+
+tests: $(NEURO_OBJS) $(TEST_OBJS)
+	$(CC) $(CFLAGS) -o $@ $(NEURO_OBJS) $(TEST_OBJS) $(LIBS)
+
+test: tests
+	./tests
 
 clean:
-	rm neuro test *.o
-
-
+	rm neuro tests *.o
